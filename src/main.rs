@@ -1,7 +1,6 @@
 pub mod libs;
 
-use libs::{sound::play_sound, timer::MetronomeTimer};
-use rodio::OutputStream;
+use libs::{sound::SoundPlayer, timer::MetronomeTimer};
 
 fn main() {
     // Input
@@ -11,11 +10,9 @@ fn main() {
     let use_time_signature = true;
     let time_signature = 3;
 
-    // Initialize audio
-    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-
     // Start metronome
     let mut timer = MetronomeTimer::new(bpm, time_signature, sound_time_s);
+    let sound_player = SoundPlayer::new(sound_time_s);
     loop {
         timer.increase_beat();
 
@@ -26,7 +23,8 @@ fn main() {
             sound_hz
         };
 
-        play_sound(&stream_handle, sound_frequency, sound_time_s);
+        sound_player.play_sound(sound_frequency);
+
         timer.wait_for_the_next_beat();
     }
 }
