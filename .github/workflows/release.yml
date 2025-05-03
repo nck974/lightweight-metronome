@@ -1,0 +1,54 @@
+name: Release App
+
+on:
+  push:
+    tags:
+      - '*.*.*'  # Only runs on version tags like x.y.z
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-pc-windows-msi
+          override: true
+
+      - name: Install dependencies
+        run: |
+          npm install
+          rustup target add x86_64-pc-windows-msvc
+
+      - name: Build Tauri App
+        run: npm run tauri build
+
+      - name: Find built artifacts
+        id: find_artifacts
+        run: |
+          $exe = Get-ChildItem .\src-tauri\target\release\bundle\* -Recurse -Filter *.exe | Select-Object -ExpandProperty FullName
+          $msi = Get-ChildItem .\src-tauri\target\release\bundle\* -Recurse -Filter *.msi | Select-Object -ExpandProperty FullName
+          echo "exe_path=$exe" >> $env:GITHUB_OUTPUT
+          echo "msi_path=$msi" >> $env:GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ steps.find_artifacts.outputs.exe_path }}
+            ${{ steps.find_artifacts.outputs.msi_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
