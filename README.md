@@ -28,14 +28,3 @@ Shortcuts:
 |Space| Start/stop |
 |ArrowUp/ArrowDown|Increase/decrease bpm|
 |ArrowLeft/ArrowRight|Change the time signature|
-
-## Roadmap
-
-- [ X ] Create time signature radio button.
-- [ X ] Use same button to pause and start.
-- [ X ] Add logo.
-- [ X ] Document readme.
-- [] Commit to gitlab.
-- [] Create pipeline to build the artefact.
-- [] Build artefact.
-- [] Release first version.
