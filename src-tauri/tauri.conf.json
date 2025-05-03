@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "lightweight-metronome",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "com.nichoko.lightweight-metronome",
   "build": {
     "beforeDevCommand": "npm run start",
@@ -14,7 +14,7 @@
       {
         "title": "lightweight-metronome",
         "width": 800,
-        "height": 600
+        "height": 500
       }
     ],
     "security": {
